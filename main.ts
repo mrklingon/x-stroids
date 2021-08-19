@@ -4,6 +4,10 @@ namespace SpriteKind {
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     fire = 40
 })
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    music.magicWand.playUntilDone()
+    XWing.setPosition(randint(0, 160), randint(0, 120))
+})
 sprites.onOverlap(SpriteKind.rock, SpriteKind.rock, function (sprite, otherSprite) {
     music.knock.play()
     sprite.destroy()
@@ -14,7 +18,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     music.pewPew.play()
     lbolt.setPosition(XWing.x, XWing.y)
     lbolt.setVelocity(xvel[direction] * 10, yvel[direction] * 10)
-    lbolt.setFlag(SpriteFlag.DestroyOnWall, true)
+    lbolt.setFlag(SpriteFlag.AutoDestroy, true)
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = direction - 1
