@@ -5,11 +5,13 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     fire = 40
 })
 sprites.onOverlap(SpriteKind.rock, SpriteKind.rock, function (sprite, otherSprite) {
+    music.knock.play()
     sprite.destroy()
     newAsteroid()
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     lbolt = sprites.create(laser[direction], SpriteKind.Projectile)
+    music.pewPew.play()
     lbolt.setPosition(XWing.x, XWing.y)
     lbolt.setVelocity(xvel[direction] * 10, yvel[direction] * 10)
     lbolt.setFlag(SpriteFlag.DestroyOnWall, true)
@@ -22,6 +24,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 sprites.onOverlap(SpriteKind.rock, SpriteKind.Player, function (sprite, otherSprite) {
     sprite.destroy()
+    music.knock.play()
     newAsteroid()
     info.changeLifeBy(-1)
     scene.cameraShake(4, 500)
