@@ -39,6 +39,13 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
         direction = direction - 8
     }
 })
+sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
+    sprite.destroy()
+    music.knock.play()
+    info.changeLifeBy(-1)
+    mkTie()
+    scene.cameraShake(4, 500)
+})
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     fire = 0
 })
@@ -47,12 +54,25 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.rock, function (sprite, othe
     otherSprite.destroy()
     newAsteroid()
 })
+function mkTie () {
+    pause(500 * randint(2, 5))
+    Tie = sprites.create(assets.image`TieF`, SpriteKind.Enemy)
+    Tie.setPosition(randint(0, 160), randint(0, 120))
+    Tie.setVelocity(randint(0, 65), randint(0, 65))
+    Tie.setBounceOnWall(true)
+}
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    info.changeScoreBy(5)
+    otherSprite.destroy()
+    mkTie()
+})
 function newAsteroid () {
     asteroid = sprites.create(Asts[randint(0, 3)], SpriteKind.rock)
     asteroid.setPosition(randint(0, 160), randint(0, 120))
     asteroid.setVelocity(randint(0, 65), randint(0, 65))
     asteroid.setBounceOnWall(true)
 }
+let Tie: Sprite = null
 let lbolt: Sprite = null
 let yvel: number[] = []
 let xvel: number[] = []
@@ -200,6 +220,7 @@ let bounce = [
 2,
 3
 ]
+mkTie()
 game.onUpdate(function () {
     XWing.setImage(Xwing[direction])
     if (fire > 0) {
