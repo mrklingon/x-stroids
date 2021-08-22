@@ -7,12 +7,12 @@ sprites.onOverlap(SpriteKind.laser, SpriteKind.rock, function (sprite, otherSpri
     otherSprite.destroy()
     newAsteroid()
 })
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    fire = 10
+})
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     music.magicWand.playUntilDone()
     XWing.setPosition(randint(0, 160), randint(0, 120))
-})
-controller.up.onEvent(ControllerButtonEvent.Repeated, function () {
-    fire = 10
 })
 sprites.onOverlap(SpriteKind.rock, SpriteKind.rock, function (sprite, otherSprite) {
     music.knock.play()
@@ -76,7 +76,7 @@ sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSp
     mkTie()
     scene.cameraShake(4, 500)
 })
-controller.down.onEvent(ControllerButtonEvent.Repeated, function () {
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     fire = 0
 })
 function mkTie () {
@@ -216,7 +216,7 @@ img`
     . . . . . . . . . . . . . . . . 
     `
 ]
-for (let index = 0; index <= 3; index++) {
+for (let index = 0; index <= 2; index++) {
     asteroid = sprites.create(Asts[randint(0, 3)], SpriteKind.rock)
     asteroid.setPosition(randint(0, 160), randint(0, 120))
     asteroid.setVelocity(randint(0, 65), randint(0, 65))
@@ -275,6 +275,5 @@ game.onUpdate(function () {
         XWing.setVelocity(xvel[direction], yvel[direction])
     } else {
         fire += -1
-        XWing.setVelocity(0, 0)
     }
 })
