@@ -1,6 +1,12 @@
 namespace SpriteKind {
     export const rock = SpriteKind.create()
+    export const laser = SpriteKind.create()
 }
+sprites.onOverlap(SpriteKind.laser, SpriteKind.rock, function (sprite, otherSprite) {
+    info.changeScoreBy(5)
+    otherSprite.destroy()
+    newAsteroid()
+})
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     fire = 40
 })
@@ -14,11 +20,17 @@ sprites.onOverlap(SpriteKind.rock, SpriteKind.rock, function (sprite, otherSprit
     newAsteroid()
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    lbolt = sprites.create(laser[direction], SpriteKind.Projectile)
+    lbolt = sprites.create(laser[direction], SpriteKind.laser)
     music.pewPew.play()
     lbolt.setPosition(XWing.x, XWing.y)
     lbolt.setVelocity(xvel[direction] * 10, yvel[direction] * 10)
     lbolt.setFlag(SpriteFlag.AutoDestroy, true)
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Player, function (sprite, otherSprite) {
+    sprite.destroy()
+    music.knock.play()
+    info.changeLifeBy(-1)
+    scene.cameraShake(4, 500)
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = direction - 1
@@ -32,6 +44,10 @@ sprites.onOverlap(SpriteKind.rock, SpriteKind.Player, function (sprite, otherSpr
     newAsteroid()
     info.changeLifeBy(-1)
     scene.cameraShake(4, 500)
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Projectile, function (sprite, otherSprite) {
+    sprite.destroy()
+    otherSprite.destroy()
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = direction + 1
@@ -49,19 +65,35 @@ sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSp
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     fire = 0
 })
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.rock, function (sprite, otherSprite) {
-    info.changeScoreBy(5)
-    otherSprite.destroy()
-    newAsteroid()
-})
 function mkTie () {
     pause(500 * randint(2, 5))
     Tie = sprites.create(assets.image`TieF`, SpriteKind.Enemy)
     Tie.setPosition(randint(0, 160), randint(0, 120))
     Tie.setVelocity(randint(0, 65), randint(0, 65))
     Tie.setBounceOnWall(true)
+    pause(500 * randint(3, 7))
+    Tbolt = sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . 7 . . . . . 
+        . . . . 7 . . . . 7 . . . . . . 
+        . . . . . 7 . . . 7 . . . . . . 
+        . . . . . . 7 7 7 . . . . . . . 
+        . . . 7 7 . 7 . 7 . 7 7 . . . . 
+        . . . . . . 7 7 7 . . . . . . . 
+        . . . . . . 7 . . 7 . . . . . . 
+        . . . . . . 7 . . . 7 . . . . . 
+        . . . . . 7 . . . . . . . . . . 
+        . . . . 7 . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, Tie, 50, 50)
+    Tbolt.setFlag(SpriteFlag.AutoDestroy, true)
+    Tbolt.follow(XWing, 100)
 }
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+sprites.onOverlap(SpriteKind.laser, SpriteKind.Enemy, function (sprite, otherSprite) {
     info.changeScoreBy(5)
     otherSprite.destroy()
     mkTie()
@@ -72,6 +104,7 @@ function newAsteroid () {
     asteroid.setVelocity(randint(0, 65), randint(0, 65))
     asteroid.setBounceOnWall(true)
 }
+let Tbolt: Sprite = null
 let Tie: Sprite = null
 let lbolt: Sprite = null
 let yvel: number[] = []
