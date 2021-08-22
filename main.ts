@@ -7,12 +7,12 @@ sprites.onOverlap(SpriteKind.laser, SpriteKind.rock, function (sprite, otherSpri
     otherSprite.destroy()
     newAsteroid()
 })
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    fire = 40
-})
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     music.magicWand.playUntilDone()
     XWing.setPosition(randint(0, 160), randint(0, 120))
+})
+controller.up.onEvent(ControllerButtonEvent.Repeated, function () {
+    fire = 10
 })
 sprites.onOverlap(SpriteKind.rock, SpriteKind.rock, function (sprite, otherSprite) {
     music.knock.play()
@@ -37,6 +37,13 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     if (direction < 0) {
         direction = direction + 8
     }
+    XWing.setImage(Xwing[direction])
+    if (fire > 0) {
+        XWing.setVelocity(xvel[direction], yvel[direction])
+    } else {
+        fire += -1
+        XWing.setVelocity(0, 0)
+    }
 })
 sprites.onOverlap(SpriteKind.rock, SpriteKind.Player, function (sprite, otherSprite) {
     sprite.destroy()
@@ -54,6 +61,13 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     if (direction > 8) {
         direction = direction - 8
     }
+    XWing.setImage(Xwing[direction])
+    if (fire > 0) {
+        XWing.setVelocity(xvel[direction], yvel[direction])
+    } else {
+        fire += -1
+        XWing.setVelocity(0, 0)
+    }
 })
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
     sprite.destroy()
@@ -62,7 +76,7 @@ sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSp
     mkTie()
     scene.cameraShake(4, 500)
 })
-controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+controller.down.onEvent(ControllerButtonEvent.Repeated, function () {
     fire = 0
 })
 function mkTie () {
@@ -114,10 +128,11 @@ let XWing: Sprite = null
 let laser: Image[] = []
 let asteroid: Sprite = null
 let Asts: Image[] = []
+let Xwing: Image[] = []
 let fire = 0
 fire = 0
 game.splash("Pilot your X-Wing through the asteroids")
-let Xwing = [
+Xwing = [
 assets.image`myImage`,
 assets.image`myImage4`,
 assets.image`myImage0`,
