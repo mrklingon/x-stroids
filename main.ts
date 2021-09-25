@@ -12,8 +12,8 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     XWing.setPosition(randint(0, 160), randint(0, 120))
-    fire = 0
     music.magicWand.playUntilDone()
+    fire = 0
 })
 sprites.onOverlap(SpriteKind.rock, SpriteKind.rock, function (sprite, otherSprite) {
     music.knock.play()
