@@ -8,7 +8,7 @@ sprites.onOverlap(SpriteKind.laser, SpriteKind.rock, function (sprite, otherSpri
     newAsteroid()
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    fire = 10
+    fire = 5
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     music.magicWand.playUntilDone()
